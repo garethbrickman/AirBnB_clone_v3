@@ -12,7 +12,7 @@ app.register_blueprint(app_views)
 
 
 @app.teardown_appcontext
-def close():
+def close(exc):
     """Calls storage close method"""
     storage.close()
 
