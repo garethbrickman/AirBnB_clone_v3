@@ -19,7 +19,7 @@ def putstate(state):
     try:
         new = request.get_json()
     except:
-        return ("Not a JSON", 400)
+        return ({"error": "Not a JSON"}, 400)
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(state, k, v)
@@ -44,9 +44,9 @@ def states():
         try:
             new = request.get_json()
         except:
-            return ("Not a JSON", 400)
+            return ({"error": "Not a JSON"}, 400)
         if 'name' not in new.keys():
-            return ("Missing name", 400)
+            return ({"error": "Missing name"}, 400)
         x = State()
         for (k, v) in new.items():
             setattr(x, k, v)
