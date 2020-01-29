@@ -25,7 +25,7 @@ def putcity(city):
 
 def deletecity(city):
     storage.delete(city)
-    storage.reload()
+    storage.save()
     return ({}, 200)
 
 

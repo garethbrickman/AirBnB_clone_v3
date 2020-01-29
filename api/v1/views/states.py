@@ -28,7 +28,7 @@ def putstate(state):
 def deletestate(state):
     """ """
     storage.delete(state)
-    storage.reload()
+    storage.save()
     return ({}, 200)
 
 
