@@ -3,11 +3,13 @@
 starts a Flask web application
 """
 from flask import Flask, abort, jsonify
+from flask_cors import CORS
 from models import storage
 from os import getenv
 from api.v1.views import app_views
 
 app = Flask(__name__)
+cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
 app.register_blueprint(app_views)
 
 
@@ -16,10 +18,10 @@ def close(exc):
     """Calls storage close method"""
     storage.close()
 
+
 @app.errorhandler(404)
 def not_found(e):
-    """ Returns 404 error in JSON
-    """
+    """Returns 404 error in JSON"""
     e = {"error": "Not found"}
     return e, 404
 
