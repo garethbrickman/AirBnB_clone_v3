@@ -4,6 +4,7 @@ Creates a new view for State objects for all default API actions
 """
 from flask import Flask, request, jsonify
 from api.v1.views import app_views
+from api.v1.app import not_found
 from models import storage
 from models.city import City
 
@@ -62,4 +63,4 @@ def cities_id(ident):
                 return putcity(c)
             elif request.method == 'DELETE':
                 return deletecity(c)
-    return ({}, 404)
+    return (not_found(None))
