@@ -2,7 +2,7 @@
 """
 starts a Flask web application
 """
-from flask import Flask
+from flask import Flask, abort, jsonify
 from models import storage
 from os import getenv
 from api.v1.views import app_views
@@ -15,6 +15,13 @@ app.register_blueprint(app_views)
 def close(exc):
     """Calls storage close method"""
     storage.close()
+
+@app.errorhandler(404)
+def not_found(e):
+    """ Returns 404 error in JSON
+    """
+    e = {"error": "Not found"}
+    return e, 404
 
 if __name__ == '__main__':
     if getenv("HBNB_API_HOST"):
