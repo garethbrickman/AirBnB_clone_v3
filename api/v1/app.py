@@ -26,6 +26,16 @@ def not_found(e):
     e = {"error": "Not found"}
     return e, 404
 
+
+@app.errorhandler(400)
+def error_400(e):
+    """Returns 400 error in JSON"""
+    if not e:
+        e = {"error": "400"}
+    else:
+        return e, 400
+
+
 if __name__ == '__main__':
     if getenv("HBNB_API_HOST"):
         host = getenv("HBNB_API_HOST")
