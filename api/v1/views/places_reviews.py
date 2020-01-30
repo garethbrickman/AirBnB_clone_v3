@@ -62,6 +62,10 @@ def reviews(place_id):
             return ({"error": "Missing name"}, 400)
         if 'user_id' not in new.keys():
             return ({"error": "Missing user_id"}, 400)
+        user_id = new['user_id']
+        y = [x.id for x in storage.all('User').values()]
+        if user_id not in y:
+            return not_found(None)
         if 'text' not in new.keys():
             return ({"error": "Missing text"}, 400)
         x = Review()
