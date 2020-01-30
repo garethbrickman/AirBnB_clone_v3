@@ -10,12 +10,12 @@ from models.state import State
 
 
 def getstate(state):
-    """ """
+    """Get object"""
     return (state.to_dict(), 200)
 
 
 def putstate(state):
-    """ """
+    """Update object"""
     try:
         new = request.get_json()
     except:
@@ -28,7 +28,7 @@ def putstate(state):
 
 
 def deletestate(state):
-    """ """
+    """Delete object"""
     storage.delete(state)
     storage.save()
     return ({}, 200)
@@ -56,7 +56,7 @@ def states():
 
 @app_views.route('/states/<ident>', methods=['GET', 'PUT', 'DELETE'])
 def states_id(ident):
-    """ """
+    """Retrieves a specific object """
     states = storage.all('State')
     for s in states.values():
         if s.id == ident:
