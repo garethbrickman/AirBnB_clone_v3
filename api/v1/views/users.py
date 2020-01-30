@@ -21,7 +21,8 @@ def putuser(user):
     except:
         return ({"error": "Not a JSON"}, 400)
     for (k, v) in new.items():
-        if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
+        if k is not 'id' and k is not 'email'\
+           and k is not 'created_at' and k is not 'updated_at':
             setattr(user, k, v)
     user.save()
     return (user.to_dict(), 200)
@@ -45,8 +46,10 @@ def users():
             new = request.get_json()
         except:
             return ({"error": "Not a JSON"}, 400)
-        if 'name' not in new.keys():
-            return ({"error": "Missing name"}, 400)
+        if 'email' not in new.keys():
+            return ({"error": "Missing email"}, 400)
+        if 'password' not in new.keys():
+            return ({"error": "Missing password"}, 400)
         x = User()
         for (k, v) in new.items():
             setattr(x, k, v)
