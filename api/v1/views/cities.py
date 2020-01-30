@@ -37,8 +37,17 @@ def deletecity(city):
 @app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
 def cities(state_id):
     """Retrieves list of all objects"""
+    state = None
+    for s in storage.all('State').values():
+        if s.id == state_id:
+            state = s
+    if state is None:
+        return not_found(None)
     if request.method == 'GET':
-        all_cities = [x.to_dict() for x in storage.all('City').values()]
+        all_cities = []
+        for x in storage.all('City').values():
+            if x.state_id == state_id:
+                all_cities.append(x.to_dict())
         return (jsonify(all_cities), 200)
     elif request.method == 'POST':
         try:
@@ -50,6 +59,7 @@ def cities(state_id):
         x = City()
         for (k, v) in new.items():
             setattr(x, k, v)
+        setattr(x, 'state_id', state_id)
         x.save()
         return (x.to_dict(), 201)
 
@@ -57,7 +67,7 @@ def cities(state_id):
 @app_views.route('/cities/<ident>', methods=['GET', 'PUT', 'DELETE'])
 def cities_id(ident):
     """Retrieves a specific object"""
-    cities = storage.all("City")
+    cities = storage.all("City").values()
     for c in cities:
         if c.id == ident:
             if request.method == 'GET':
@@ -66,4 +76,4 @@ def cities_id(ident):
                 return putcity(c)
             elif request.method == 'DELETE':
                 return deletecity(c)
-    return (not_found(None))
+    return not_found(None)
