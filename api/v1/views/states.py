@@ -11,7 +11,7 @@ from models.state import State
 
 def getstate(state):
     """Get object"""
-    return (state.to_dict(), 200)
+    return (jsonify(state.to_dict()), 200)
 
 
 def putstate(state):
@@ -20,19 +20,18 @@ def putstate(state):
         new = request.get_json()
     except:
         abort(400, 'Not a JSON')
-        # return (error_400({"error": "Not a JSON"}))
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(state, k, v)
     storage.save()
-    return (state.to_dict(), 200)
+    return (jsonify(state.to_dict()), 200)
 
 
 def deletestate(state):
     """Delete object"""
     storage.delete(state)
     storage.save()
-    return ({}, 200)
+    return (jsonify({}), 200)
 
 
 @app_views.route('/states', methods=['GET', 'POST'])
@@ -46,15 +45,13 @@ def states():
             new = request.get_json()
         except:
             abort(400, 'Not a JSON')
-            # return (error_400({"error": "Not a JSON"}))
         if 'name' not in new.keys():
             abort(400, 'Missing name')
-            # return (error_400({"error": "Missing name"}))
         x = State()
         for (k, v) in new.items():
             setattr(x, k, v)
         x.save()
-        return (x.to_dict(), 201)
+        return (jsonify(x.to_dict()), 201)
 
 
 @app_views.route('/states/<ident>', methods=['GET', 'PUT', 'DELETE'])
