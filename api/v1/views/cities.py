@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Creates a new view for State objects for all default API actions
+Creates a new view for objects for all default API actions
 """
 from flask import Flask, request, jsonify
 from api.v1.views import app_views
@@ -10,10 +10,12 @@ from models.city import City
 
 
 def getcity(city):
+    """Get object"""
     return (city.to_dict(), 200)
 
 
 def putcity(city):
+    """Update object"""
     try:
         new = request.get_json()
     except:
@@ -26,14 +28,15 @@ def putcity(city):
 
 
 def deletecity(city):
+    """Delete object"""
     storage.delete(city)
     storage.save()
     return ({}, 200)
 
 
-@app_views.route('/cities', methods=['GET', 'POST'])
-def cities():
-    """  Retrieves list of all state objs"""
+@app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'])
+def cities(state_id):
+    """Retrieves list of all objects"""
     if request.method == 'GET':
         all_cities = [x.to_dict() for x in storage.all('City').values()]
         return (jsonify(all_cities), 200)
@@ -53,7 +56,7 @@ def cities():
 
 @app_views.route('/cities/<ident>', methods=['GET', 'PUT', 'DELETE'])
 def cities_id(ident):
-    """ """
+    """Retrieves a specific object"""
     cities = storage.all("City")
     for c in cities:
         if c.id == ident:
