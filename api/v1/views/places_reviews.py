@@ -6,15 +6,15 @@ from flask import Flask, request, jsonify
 from api.v1.views import app_views
 from api.v1.app import not_found
 from models import storage
-from models.place import Place
+from models.review import Review
 
 
-def getplace(place):
+def getreview(review):
     """Get object"""
-    return (place.to_dict(), 200)
+    return (review.to_dict(), 200)
 
 
-def putplace(place):
+def putreview(review):
     """Update object"""
     try:
         new = request.get_json()
@@ -25,34 +25,34 @@ def putplace(place):
                 k != 'created_at' and \
                 k != 'updated_at' and \
                 k != 'user_id' and \
-                k != 'city_id':
-            setattr(place, k, v)
-    place.save()
-    return (place.to_dict(), 200)
+                k != 'place_id':
+            setattr(review, k, v)
+    review.save()
+    return (review.to_dict(), 200)
 
 
-def deleteplace(place):
+def deletereview(review):
     """Delete object"""
-    storage.delete(place)
+    storage.delete(review)
     storage.save()
     return ({}, 200)
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET', 'POST'])
-def places(city_id):
+@app_views.route('/places/<place_id>/reviews', methods=['GET', 'POST'])
+def reviews(place_id):
     """Retrieves list of all objects"""
-    city = None
-    for c in storage.all('City').values():
-        if c.id == city_id:
-            city = c
-    if city is None:
+    place = None
+    for c in storage.all('Place').values():
+        if c.id == place_id:
+            place = c
+    if place is None:
         return not_found(None)
     if request.method == 'GET':
-        all_places = []
-        for x in storage.all('Place').values():
-            if x.city_id == city_id:
-                all_places.append(x.to_dict())
-        return (jsonify(all_places), 200)
+        all_reviews = []
+        for x in storage.all('Review').values():
+            if x.place_id == place_id:
+                all_reviews.append(x.to_dict())
+        return (jsonify(all_reviews), 200)
     elif request.method == 'POST':
         try:
             new = request.get_json()
@@ -62,24 +62,26 @@ def places(city_id):
             return ({"error": "Missing name"}, 400)
         if 'user_id' not in new.keys():
             return ({"error": "Missing user_id"}, 400)
-        x = Place()
+        if 'text' not in new.keys():
+            return ({"error": "Missing text"}, 400)
+        x = Review()
         for (k, v) in new.items():
             setattr(x, k, v)
-        setattr(x, 'city_id', city_id)
+        setattr(x, 'place_id', place_id)
         x.save()
         return (x.to_dict(), 201)
 
 
-@app_views.route('/places/<ident>', methods=['GET', 'PUT', 'DELETE'])
-def places_id(ident):
+@app_views.route('/reviews/<ident>', methods=['GET', 'PUT', 'DELETE'])
+def reviews_id(ident):
     """Retrieves a specific object"""
-    places = storage.all("Place").values()
-    for p in places:
+    reviews = storage.all("Review").values()
+    for p in reviews:
         if p.id == ident:
             if request.method == 'GET':
-                return getplace(p)
+                return getreview(p)
             elif request.method == 'PUT':
-                return putplace(p)
+                return putreview(p)
             elif request.method == 'DELETE':
-                return deleteplace(p)
+                return deletereview(p)
     return not_found(None)
