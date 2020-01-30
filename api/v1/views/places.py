@@ -56,6 +56,8 @@ def places(city_id):
             return ({"error": "Not a JSON"}, 400)
         if 'name' not in new.keys():
             return ({"error": "Missing name"}, 400)
+        if 'user_id' not in new.keys():
+            return ({"error": "Missing user_id"}, 400)
         x = Place()
         for (k, v) in new.items():
             setattr(x, k, v)
