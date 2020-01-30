@@ -18,6 +18,7 @@ import json
 import os
 import pep8
 import unittest
+import MySQLdb
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -28,7 +29,22 @@ class TestDBStorageDocs(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Set up for the doc tests"""
+        models.storage.reload()
         cls.dbs_f = inspect.getmembers(DBStorage, inspect.isfunction)
+        cls.conn = MySQLdb.connect(host="localhost",
+                                   port=3306,
+                                   user="root",
+                                   passwd="root",
+                                   db="hbnb_dev_db",
+                                   charset="utf8")
+
+        cls.cur = cls.conn.cursor()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Tear down the class"""
+        cls.cur.close()
+        cls.conn.close()
 
     def test_pep8_conformance_db_storage(self):
         """Test that models/engine/db_storage.py conforms to PEP8."""
@@ -67,33 +83,46 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
-    # def test_count_all(self):
-    #     """Test that count returns the number of all DBStorage objects"""
-    #     storage = DBStorage()
-    #     print("################")
-    #     print(storage)
-    #     print("################")
-    #     print("################")
-    #     print(storage.all())
-    #     print("################")
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_all(self):
+        """Test that count returns the number of all DBStorage objects"""
+        my_len = len(models.storage.all().values())
+        self.cur.execute("SELECT * FROM states")
+        s = len(self.cur.fetchall())
+        self.cur.execute("SELECT * FROM amenities")
+        a = len(self.cur.fetchall())
+        self.cur.execute("SELECT * FROM cities")
+        c = len(self.cur.fetchall())
+        self.cur.execute("SELECT * FROM places")
+        p = len(self.cur.fetchall())
+        self.cur.execute("SELECT * FROM reviews")
+        r = len(self.cur.fetchall())
+        self.cur.execute("SELECT * FROM users")
+        u = len(self.cur.fetchall())
+        total = s + a + c + p + r + u
+        self.assertEqual(total, my_len)
 
-    #     print(count)
-    #     self.assertEqual(count, len(storage._DBStorage__objects))
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_state(self):
+        """Test count returns the number of State DBStorage.__objects"""
+        my_len = len(models.storage.all("State").values())
+        self.cur.execute("SELECT * FROM states")
+        self.assertEqual(len(self.cur.fetchall()), my_len)
 
-     # def test_count_state(self):
-     #    """Test count returns the number of State FileStorage.__objects"""
-     #    storage = FileStorage()
-     #    count = storage.count("State")
-     #    self.assertEqual(count, len(storage.all("State")))
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_state(self):
+        """Test that get returns the specific State DBStorage.__objects"""
+        try:
+            self.cur.execute("SELECT id FROM states LIMIT 1")
+            my_id = self.cur.fetchall()[0][0]
+            other_name = models.storage.get('State', my_id).name
+            my_id = "'" + my_id + "'"
+            self.cur.execute("SELECT name FROM states WHERE id=" + my_id)
+            my_name = self.cur.fetchall()[0][0]
 
-     # def test_get_state(self):
-     #    """Test that get returns the specific State FileStorage.__objects"""
-     #    storage = FileStorage()
-     #    first_state_id = list(storage.all("State").values())[0].id
-     #    get_obj = storage.get("State", first_state_id)
-     #    self.assertIs(type(get_obj),
-     #                  type(storage.get("State", first_state_id)))
-     #    self.assertIs(get_obj, storage.get("State", first_state_id))
+            self.assertEqual(my_name, other_name)
+        except:
+            self.assertEqual(True, False)
 
 
 class TestFileStorage(unittest.TestCase):
@@ -106,11 +135,14 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_no_class(self):
         """Test that all returns all rows when no class is passed"""
+        pass
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_new(self):
         """test that new adds an object to the database"""
+        pass
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+        pass
