@@ -11,11 +11,15 @@ from models.state import State
 
 def getstate(state):
     """Get object"""
+    if state is None:
+        abort(404)
     return (jsonify(state.to_dict()), 200)
 
 
 def putstate(state):
     """Update object"""
+    if state is None:
+        abort(404)
     try:
         new = request.get_json()
     except:
@@ -29,6 +33,8 @@ def putstate(state):
 
 def deletestate(state):
     """Delete object"""
+    if state is None:
+        abort(404)
     storage.delete(state)
     storage.save()
     return (jsonify({}), 200)
