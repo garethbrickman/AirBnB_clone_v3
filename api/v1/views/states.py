@@ -23,7 +23,7 @@ def putstate(state):
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(state, k, v)
-    state.save()
+    storage.save()
     return (state.to_dict(), 200)
 
 
