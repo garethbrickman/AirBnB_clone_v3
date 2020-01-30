@@ -4,7 +4,7 @@ Creates a new view for State objects for all default API actions
 """
 from flask import Flask, request, jsonify
 from api.v1.views import app_views
-from api.v1.app import not_found
+from api.v1.app import not_found, error_400
 from models import storage
 from models.state import State
 
@@ -19,7 +19,7 @@ def putstate(state):
     try:
         new = request.get_json()
     except:
-        return ({"error": "Not a JSON"}, 400)
+        return (error_400({"error": "Not a JSON"}))
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(state, k, v)
@@ -44,9 +44,9 @@ def states():
         try:
             new = request.get_json()
         except:
-            return ({"error": "Not a JSON"}, 400)
+            return (error_400({"error": "Not a JSON"}))
         if 'name' not in new.keys():
-            return ({"error": "Missing name"}, 400)
+            return (error_400({"error": "Missing name"}))
         x = State()
         for (k, v) in new.items():
             setattr(x, k, v)
