@@ -40,7 +40,7 @@ def cities(state_id):
         if s.id == state_id:
             state = s
     if state is None:
-        return not_found(None)
+        abort(404)
     if request.method == 'GET':
         all_cities = []
         for x in storage.all('City').values():
