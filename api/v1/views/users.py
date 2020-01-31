@@ -44,9 +44,9 @@ def users():
             abort(400, "Not a JSON")
         new = request.get_json()
         if 'email' not in new.keys():
-            return ({"error": "Missing email"}, 400)
+            abort(400, "Missing email")
         if 'password' not in new.keys():
-            return ({"error": "Missing password"}, 400)
+            abort(400, "Missing password")
         x = User()
         for (k, v) in new.items():
             setattr(x, k, v)
