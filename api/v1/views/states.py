@@ -19,10 +19,9 @@ def putstate(state):
     """Update object"""
     if state is None:
         abort(404)
-    try:
-        new = request.get_json()
-    except:
+    if request.is_json:
         abort(400, 'Not a JSON')
+    new = request.get_json()
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(state, k, v)
@@ -46,10 +45,9 @@ def states():
         all_states = [x.to_dict() for x in storage.all('State').values()]
         return (jsonify(all_states), 200)
     elif request.method == 'POST':
-        try:
-            new = request.get_json()
-        except:
+        if request.is_json:
             abort(400, 'Not a JSON')
+        new = request.get_json()
         if 'name' not in new.keys():
             abort(400, 'Missing name')
         x = State()
