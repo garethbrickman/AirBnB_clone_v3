@@ -32,7 +32,7 @@ class TestDBStorageDocs(unittest.TestCase):
         models.storage.reload()
         cls.dbs_f = inspect.getmembers(DBStorage, inspect.isfunction)
         e = os.environ
-        cls.conn = MySQLdb.connect(host=e.get("HBNB_MYSQL_HOST", "localhost"),
+        cls.conn = MySQLdb.connect(host=e.get("HBNB_MYSQL_HOST", "127.0.0.1"),
                                    port=3306,
                                    user=e.get("HBNB_MYSQL_USER", "root"),
                                    passwd=e.get("HBNB_MYSQL_PWD", "root"),
