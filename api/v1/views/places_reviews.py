@@ -46,7 +46,7 @@ def reviews(place_id):
         if c.id == place_id:
             place = c
     if place is None:
-        return not_found(None)
+        abort(404)
     if request.method == 'GET':
         all_reviews = []
         for x in storage.all('Review').values():
@@ -64,7 +64,7 @@ def reviews(place_id):
         user_id = new['user_id']
         y = [x.id for x in storage.all('User').values()]
         if user_id not in y:
-            return not_found(None)
+            abort(404)
         if 'text' not in new.keys():
             return ({"error": "Missing text"}, 400)
         x = Review()

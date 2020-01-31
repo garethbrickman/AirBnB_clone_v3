@@ -44,7 +44,7 @@ def places(city_id):
         if c.id == city_id:
             city = c
     if city is None:
-        return not_found(None)
+        abort(404)
     if request.method == 'GET':
         all_places = []
         for x in storage.all('Place').values():
@@ -62,7 +62,7 @@ def places(city_id):
         user_id = new['user_id']
         y = [x.id for x in storage.all('User').values()]
         if user_id not in y:
-            return not_found(None)
+            abort(404)
         x = Place()
         for (k, v) in new.items():
             setattr(x, k, v)
