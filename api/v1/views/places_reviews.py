@@ -27,7 +27,7 @@ def putreview(review):
                 k != 'user_id' and \
                 k != 'place_id':
             setattr(review, k, v)
-    review.save()
+    storage.save()
     return (review.to_dict(), 200)
 
 

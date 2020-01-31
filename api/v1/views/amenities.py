@@ -21,7 +21,7 @@ def putamen(amen):
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(amen, k, v)
-    amen.save()
+    storage.save()
     return (amen.to_dict(), 200)
 
 

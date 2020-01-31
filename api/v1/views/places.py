@@ -25,7 +25,7 @@ def putplace(place):
                 k != 'user_id' and \
                 k != 'city_id':
             setattr(place, k, v)
-    place.save()
+    storage.save()
     return (place.to_dict(), 200)
 
 

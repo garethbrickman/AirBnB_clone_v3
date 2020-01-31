@@ -2,7 +2,7 @@
 """
 Creates a new view for User objects for all default API actions
 """
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, abort
 from api.v1.views import app_views
 from models import storage
 from models.user import User
@@ -22,7 +22,7 @@ def putuser(user):
         if k is not 'id' and k is not 'email'\
            and k is not 'created_at' and k is not 'updated_at':
             setattr(user, k, v)
-    user.save()
+    storage.save()
     return (user.to_dict(), 200)
 
 
