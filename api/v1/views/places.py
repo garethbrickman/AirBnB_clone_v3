@@ -15,8 +15,8 @@ def getplace(place):
 
 def putplace(place):
     """Update object"""
-    if request.is_json:
-        return ({"error": "Not a JSON"}, 400)
+    if not request.is_json:
+        abort(400, "Not a JSON")
     new = request.get_json()
     for (k, v) in new.items():
         if k != 'id' and \
@@ -52,8 +52,8 @@ def places(city_id):
                 all_places.append(x.to_dict())
         return (jsonify(all_places), 200)
     elif request.method == 'POST':
-        if request.is_json:
-            return ({"error": "Not a JSON"}, 400)
+        if not request.is_json:
+            abort(400, "Not a JSON")
         new = request.get_json()
         if 'name' not in new.keys():
             return ({"error": "Missing name"}, 400)

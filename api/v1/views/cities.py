@@ -16,7 +16,7 @@ def getcity(city):
 def putcity(city):
     """Update object"""
     if not request.is_json:
-        return ({"error": "Not a JSON"}, 400)
+        abort(400, "Not a JSON")
     new = request.get_json()
     for (k, v) in new.items():
         if k != 'id' and k != 'created_at' and k != 'updated_at':
@@ -49,7 +49,7 @@ def cities(state_id):
         return (jsonify(all_cities), 200)
     elif request.method == 'POST':
         if not request.is_json:
-            return ({"error": "Not a JSON"}, 400)
+            abort(400, "Not a JSON")
         new = request.get_json()
         if 'name' not in new.keys():
             return ({"error": "Missing name"}, 400)

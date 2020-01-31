@@ -16,7 +16,7 @@ def getuser(user):
 def putuser(user):
     """Update object """
     if not request.is_json:
-        return ({"error": "Not a JSON"}, 400)
+        abort(400, "Not a JSON")
     new = request.get_json()
     for (k, v) in new.items():
         if k is not 'id' and k is not 'email'\
@@ -41,7 +41,7 @@ def users():
         return (jsonify(all_users), 200)
     elif request.method == 'POST':
         if not request.is_json:
-            return ({"error": "Not a JSON"}, 400)
+            abort(400, "Not a JSON")
         new = request.get_json()
         if 'email' not in new.keys():
             return ({"error": "Missing email"}, 400)
