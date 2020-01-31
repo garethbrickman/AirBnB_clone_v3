@@ -31,11 +31,12 @@ class TestDBStorageDocs(unittest.TestCase):
         """Set up for the doc tests"""
         models.storage.reload()
         cls.dbs_f = inspect.getmembers(DBStorage, inspect.isfunction)
-        cls.conn = MySQLdb.connect(host="localhost",
+        e = os.environ
+        cls.conn = MySQLdb.connect(host=e.get("HBNB_MYSQL_HOST", "localhost"),
                                    port=3306,
-                                   user="root",
-                                   passwd="root",
-                                   db="hbnb_dev_db",
+                                   user=e.get("HBNB_MYSQL_USER", "root"),
+                                   passwd=e.get("HBNB_MYSQL_PWD", "root"),
+                                   db=e.get("HBNB_MYSQL_DB", "hbnb_dev_db"),
                                    charset="utf8")
 
         cls.cur = cls.conn.cursor()
