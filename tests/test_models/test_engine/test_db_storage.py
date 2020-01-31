@@ -115,11 +115,25 @@ test_db_storage.py'])
         """Test that get returns the specific State DBStorage.__objects"""
         try:
             self.cur.execute("SELECT id FROM states LIMIT 1")
-            my_id = self.cur.fetchall()[0][0]
-            other_name = models.storage.get('State', my_id).name
+            stuff = [x for x in self.cur.fetchall()]
+            my_id = ""
+            if len(stuff) > 0:
+                more_stuff = [y for y in stuff]
+                if len(more_stuff) > 0:
+                    my_id = more_stuff[0]
+            other_name = models.storage.get('State', my_id)
+            if other_name is not None:
+                other_name = other_name.name
+            else:
+                other_name = ""
             my_id = "'" + my_id + "'"
             self.cur.execute("SELECT name FROM states WHERE id=" + my_id)
-            my_name = self.cur.fetchall()[0][0]
+            stuff = [x for x in self.cur.fetchall()]
+            my_name = ""
+            if len(stuff) > 0:
+                more_stuff = [y for y in stuff]
+                if len(more_stuff) > 0:
+                    my_name = more_stuff[0]
 
             self.assertEqual(my_name, other_name)
         except:
