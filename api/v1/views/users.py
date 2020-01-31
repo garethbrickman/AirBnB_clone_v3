@@ -15,10 +15,9 @@ def getuser(user):
 
 def putuser(user):
     """Update object """
-    try:
-        new = request.get_json()
-    except:
+    if not request.is_json:
         return ({"error": "Not a JSON"}, 400)
+    new = request.get_json()
     for (k, v) in new.items():
         if k is not 'id' and k is not 'email'\
            and k is not 'created_at' and k is not 'updated_at':
@@ -41,10 +40,9 @@ def users():
         all_users = [x.to_dict() for x in storage.all('User').values()]
         return (jsonify(all_users), 200)
     elif request.method == 'POST':
-        try:
-            new = request.get_json()
-        except:
+        if not request.is_json:
             return ({"error": "Not a JSON"}, 400)
+        new = request.get_json()
         if 'email' not in new.keys():
             return ({"error": "Missing email"}, 400)
         if 'password' not in new.keys():

@@ -17,10 +17,9 @@ def getreview(review):
 
 def putreview(review):
     """Update object"""
-    try:
-        new = request.get_json()
-    except:
+    if not request.is_json:
         return ({"error": "Not a JSON"}, 400)
+    new = request.get_json()
     for (k, v) in new.items():
         if k != 'id' and \
                 k != 'created_at' and \
@@ -55,10 +54,9 @@ def reviews(place_id):
                 all_reviews.append(x.to_dict())
         return (jsonify(all_reviews), 200)
     elif request.method == 'POST':
-        try:
-            new = request.get_json()
-        except:
+        if not request.is_json:
             return ({"error": "Not a JSON"}, 400)
+        new = request.get_json()
         if 'name' not in new.keys():
             return ({"error": "Missing name"}, 400)
         if 'user_id' not in new.keys():

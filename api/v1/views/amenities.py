@@ -15,10 +15,9 @@ def getamen(amen):
 
 def putamen(amen):
     """Update object """
-    try:
-        new = request.get_json()
-    except:
+    if not request.is_json:
         return ({"error": "Not a JSON"}, 400)
+    new = request.get_json()
     for (k, v) in new.items():
         if k is not 'id' and k is not 'created_at' and k is not 'updated_at':
             setattr(amen, k, v)
@@ -40,10 +39,9 @@ def amens():
         all_amens = [x.to_dict() for x in storage.all('Amenity').values()]
         return (jsonify(all_amens), 200)
     elif request.method == 'POST':
-        try:
-            new = request.get_json()
-        except:
+        if not request.is_json:
             return ({"error": "Not a JSON"}, 400)
+        new = request.get_json()
         if 'name' not in new.keys():
             return ({"error": "Missing name"}, 400)
         x = Amenity()
