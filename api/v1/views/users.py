@@ -4,7 +4,6 @@ Creates a new view for User objects for all default API actions
 """
 from flask import Flask, request, jsonify
 from api.v1.views import app_views
-from api.v1.app import not_found
 from models import storage
 from models.user import User
 
@@ -69,4 +68,4 @@ def users_id(ident):
                 return putuser(s)
             elif request.method == 'DELETE':
                 return deleteuser(s)
-    return (not_found(None))
+    abort(404, 'Not found')

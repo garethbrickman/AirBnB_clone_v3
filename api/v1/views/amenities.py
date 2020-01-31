@@ -4,7 +4,6 @@ Creates a new view for Amenity objects for all default API actions
 """
 from flask import Flask, request, jsonify
 from api.v1.views import app_views
-from api.v1.app import not_found
 from models import storage
 from models.amenity import Amenity
 
@@ -66,4 +65,4 @@ def amens_id(ident):
                 return putamen(s)
             elif request.method == 'DELETE':
                 return deleteamen(s)
-    return (not_found(None))
+    abort(404, 'Not found')
