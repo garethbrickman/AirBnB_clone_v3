@@ -28,6 +28,6 @@ class User(BaseModel, Base):
     def __init__(self, *args, **kwargs):
         """initializes user"""
         super().__init__(*args, **kwargs)
-        if self.password != "":
+        if self.password != "" and self.password is not None:
             x = hashlib.md5(self.password.encode("utf-8")).hexdigest()
             self.password = x
