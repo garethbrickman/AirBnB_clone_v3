@@ -132,7 +132,10 @@ class TestFileStorage(unittest.TestCase):
     def test_get_state(self):
         """Test that get returns the specific State FileStorage.__objects"""
         storage = FileStorage()
-        first_state_id = list(storage.all("State").values())[0].id
+        first_state_list = list(storage.all("State").values())
+        first_state_id = ""
+        if len(first_state_list) > 0:
+            first_state_id = first_state_list[0].id
         get_obj = storage.get("State", first_state_id)
         self.assertIs(type(get_obj),
                       type(storage.get("State", first_state_id)))
